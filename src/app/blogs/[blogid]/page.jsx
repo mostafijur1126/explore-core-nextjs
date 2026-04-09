@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { preinit } from "react-dom";
 
 const blogs = [
   {
@@ -53,19 +53,21 @@ const blogs = [
   }
 ];
 
-const BlogPage = () => {
+const BlogDetails = async ({params}) => {
+    const {blogid} = await (params);
+
+    const blog = blogs.find(blog => blog.id === parseInt(blogid));
+    
+    console.log(blog);
     return (
         <div>
-            {
-                blogs.map(blog => <div key={blog.id}>
-                    <div>
-                        <h3>{blog.title}</h3>
-                        <Link className="btn" href={`/blogs/${blog.id}`}>Show Details</Link>
-                    </div>
-                </div>)
-            }
+            <h1>blog details</h1>
+            {blog && <div>
+                <h2>{blog.title}</h2>
+                <p>{blog.description}</p>
+                </div>}
         </div>
     );
 };
 
-export default BlogPage;
+export default BlogDetails;
