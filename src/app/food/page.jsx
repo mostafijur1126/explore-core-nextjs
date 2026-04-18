@@ -1,10 +1,18 @@
 import FoodCard from "@/components/foodCard/FoodCard";
+import SearchFood from "./ShortingProduct/SearchFood";
+import CategoryFilter from "./ShortingProduct/CategoryFilter";
 
-const FoodPage = async () => {
-    const res = await fetch('https://phi-lab-server.vercel.app/api/v1/lab/foods');
+const getFoods = async(category="",search="") => {
+    const res = await fetch(`https://phi-lab-server.vercel.app/api/v1/lab/foods?category=${category}&search=${search}`);
     const data = await res.json();
-    const foods = data.data;
+    return data.data;
 
+}
+
+const FoodPage = async ({searchParams}) => {
+    const sp = await searchParams;
+    // console.log(sp);
+    const foods =await getFoods(sp.category,sp.search)
     // স্ট্যাটিস্টিক্স ক্যালকুলেশন
     const totalItems = foods.length;
     const avgRating = (foods.reduce((sum, food) => sum + food.rating, 0) / foods.length).toFixed(1);
@@ -91,22 +99,8 @@ const FoodPage = async () => {
                     {/* সার্চ ও ফিল্টার বার */}
                     <div className="max-w-3xl mx-auto">
                         <div className="flex flex-col sm:flex-row gap-3">
-                            <div className="flex-1 relative">
-                                <input
-                                    type="text"
-                                    placeholder="Search for your favorite dish..."
-                                    className="w-full px-4 py-3 pl-11 pr-4 bg-gray-800/80 border border-gray-700 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300"
-                                />
-                                <svg className="absolute left-3 top-3.5 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                </svg>
-                            </div>
-                            <select className="px-4 py-3 bg-gray-800/80 border border-gray-700 rounded-xl text-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300">
-                                <option value="">All Categories</option>
-                                <option value="dish">Main Dish</option>
-                                <option value="dessert">Dessert</option>
-                                <option value="drink">Drinks</option>
-                            </select>
+                            <SearchFood></SearchFood>
+                            <CategoryFilter></CategoryFilter>
                             <select className="px-4 py-3 bg-gray-800/80 border border-gray-700 rounded-xl text-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300">
                                 <option value="">Sort by Rating</option>
                                 <option value="high">Highest Rated</option>
